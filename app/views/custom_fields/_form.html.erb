@@ -26,6 +26,8 @@
 <p><%= @custom_field.field_format == 'bool' ? f.check_box(:default_value) : f.text_field(:default_value) %></p>
 <% end %>
 
+<p><%= f.text_field :url, :size => 60 %><br /><%= l(:text_custom_field_url_info) %></p>
+
 <%= call_hook(:view_custom_fields_form_upper_box, :custom_field => @custom_field, :form => f) %>
 </div>
 

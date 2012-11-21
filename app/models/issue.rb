@@ -89,7 +89,7 @@ class Issue < ActiveRecord::Base
   after_save :reschedule_following_issues, :update_nested_set_attributes, :update_parent_attributes, :create_journal, :send_after_save_hook
   # Should be after_create but would be called before previous after_save callbacks
   after_save :after_create_from_copy
-  after_destroy :destroy_children
+  #after_destroy :destroy_children
   after_destroy :update_parent_attributes
 
   def send_after_save_hook

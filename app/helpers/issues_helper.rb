@@ -157,7 +157,8 @@ module IssuesHelper
     n = 0
     ordered_values.compact.each do |value|
       s << "</tr>\n<tr>\n" if n > 0 && (n % 2) == 0
-      s << "\t<th>#{ h(value.custom_field.name) }:</th><td>#{ simple_format_without_paragraph(h(show_value(value))) }</td>\n"
+      #s << "\t<th>#{ h(value.custom_field.name) }:</th><td>#{ simple_format_without_paragraph(h(show_value(value))) }</td>\n"
+      s << "\t<th>#{ h(value.custom_field.name) }:</th><td>#{ simple_format_without_paragraph(show_value(value)) }</td>\n"
       n += 1
     end
     s << "</tr>\n"
