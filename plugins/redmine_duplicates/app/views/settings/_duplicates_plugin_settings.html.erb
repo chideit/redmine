@@ -1,0 +1,4 @@
+<p>
+  <%= content_tag(:label, "Custom Field") %>
+  <%= select_tag("settings[field]", options_from_collection_for_select(CustomField.all, :id, :name, @settings['field'].to_i)) %>
+</p>
