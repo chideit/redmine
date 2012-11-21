@@ -109,7 +109,11 @@ module CustomFieldsHelper
   # Return a string used to display a custom value
   def show_value(custom_value)
     return "" unless custom_value
-    format_value(custom_value.value, custom_value.custom_field.field_format)
+    if custom_value.custom_field.url.empty?
+      return format_value(custom_value.value, custom_value.custom_field.field_format)
+    else
+      return url_format(custom_value)
+	end
   end
 
   # Return a string used to display a custom value
@@ -119,6 +123,25 @@ module CustomFieldsHelper
     else
       Redmine::CustomFieldFormat.format_value(value, field_format)
     end
+  end
+
+  # Return a clean URL for a given custom field value
+  def url_format(custom_value)
+    url = custom_value.custom_field.url
+    return if url.empty?
+
+    # formatted_value = format_value(custom_value.value, custom_value.custom_field.field_format)
+    def u(val, url)
+         _url=url.dup
+         while (_url.sub!(/__VALUE__/, h(val)))
+         end
+         _url
+    end
+    def f(val, format)
+        format_value(val, format)
+    end
+    return custom_value.value.split(/,\ ?/).map {|x| link_to f(x, custom_value.custom_field.field_format), u(x,url), :target=>'_blank' }.join(', ').html_safe
+    # return link_to formatted_value, url, :target=>'_blank'
   end
 
   # Return an array of custom field formats which can be used in select_tag

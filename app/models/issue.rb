@@ -86,10 +86,16 @@ class Issue < ActiveRecord::Base
   before_create :default_assign
   before_save :close_duplicates, :update_done_ratio_from_issue_status, :force_updated_on_change
   after_save {|issue| issue.send :after_project_change if !issue.id_changed? && issue.project_id_changed?} 
-  after_save :reschedule_following_issues, :update_nested_set_attributes, :update_parent_attributes, :create_journal
+  after_save :reschedule_following_issues, :update_nested_set_attributes, :update_parent_attributes, :create_journal, :send_after_save_hook
   # Should be after_create but would be called before previous after_save callbacks
   after_save :after_create_from_copy
+  after_destroy :destroy_children
   after_destroy :update_parent_attributes
+
+  def send_after_save_hook
+    #this should be renamed
+    Redmine::Hook.call_hook(:model_issues_after_save, { :issue => self, :journal => @current_journal})
+  end
 
   # Returns a SQL conditions string used to find all issues visible by the specified user
   def self.visible_condition(user, options={})
